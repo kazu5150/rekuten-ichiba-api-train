@@ -46,12 +46,18 @@ class RakutenSearchAPI:
             
             items = []
             for item in data['Items']:
+                # 商品画像URLを取得（最初の画像URL）
+                image_url = ''
+                if 'mediumImageUrls' in item['Item'] and item['Item']['mediumImageUrls']:
+                    image_url = item['Item']['mediumImageUrls'][0]['imageUrl']
+                
                 item_info = {
                     'rank': len(items) + 1,
                     'name': item['Item']['itemName'],
                     'price': item['Item']['itemPrice'],
                     'shop_name': item['Item']['shopName'],
                     'url': item['Item']['itemUrl'],
+                    'image_url': image_url,
                     'review_count': item['Item']['reviewCount'],
                     'review_average': item['Item']['reviewAverage'],
                     'description': item['Item']['itemCaption'][:100] + '...' if len(item['Item']['itemCaption']) > 100 else item['Item']['itemCaption']
@@ -89,6 +95,8 @@ class RakutenSearchAPI:
             print(f"価格: ¥{item['price']:,}")
             print(f"ショップ: {item['shop_name']}")
             print(f"レビュー: ★{item['review_average']} ({item['review_count']}件)")
+            if item['image_url']:
+                print(f"画像URL: {item['image_url']}")
             print(f"商品説明: {item['description']}")
             print(f"URL: {item['url']}")
             print("-" * 80)
